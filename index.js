@@ -1,18 +1,13 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 
 // initialize express
 const app = express();
 
 // initialize dotenv
-dotenv.config();
+require("dotenv").config();
 
-//connect to DB
-mongoose.set("strictQuery", false);
-mongoose.connect(process.env.DB_CONNECT, () => {
-  console.log("Conectado ao banco de dados.");
-});
+// connect to db
+require("./database/db");
 
 // import routes
 const authRoute = require("./routes/auth");
@@ -23,6 +18,7 @@ app.use(express.json());
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 
-app.listen(3000, () => {
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
   console.log("Server rodando 🔥");
 });

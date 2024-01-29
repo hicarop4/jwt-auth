@@ -1,21 +1,21 @@
 const router = require("express").Router();
-const verificaToken = require("./verifyToken");
+const verifyToken = require("../middlewares/verifyToken");
 const { User, getUsers } = require("../models/User");
 
-router.get("/me", verificaToken, async (req, res) => {
-  // my user
+router.get("/:id", verifyToken, async (req, res) => {
+  const uid = req.params.id;
   try {
-    const me = await User.findById(req.user._id);
-    if (!me) {
+    const user = await User.findById(uid);
+    if (!user) {
       return res.status(404).send("User not found!");
     }
-    return res.send(me);
+    return res.send(user);
   } catch (err) {
     return res.status(500).send(err);
   }
 });
 
-router.get("/list", verificaToken, async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   const users = await getUsers();
   if (!users) {
     return res.status(404).send("There's no user in database!");

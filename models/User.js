@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// criando a estrutura que vou usar para o usuário
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -19,16 +18,15 @@ const userSchema = new mongoose.Schema({
     min: 6,
     max: 1024,
   },
-  date: {
+  createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-// criando o modelo
 const User = mongoose.model("User", userSchema);
 
-// função que pega todos usuários
+// controllers
 const getUsers = async () => {
   try {
     const users = await User.find({}).select("name email date -_id");
@@ -38,7 +36,6 @@ const getUsers = async () => {
   }
 };
 
-// exportando o modelo e a função para pegar todos usuários
 module.exports = {
   User,
   getUsers,
