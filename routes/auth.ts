@@ -1,9 +1,13 @@
-const router = require("express").Router();
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
+import express from "express";
+const router = express.Router();
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 const { User } = require("../models/User");
 
-router.post("/register", async (req, res) => {
+// types
+import { Request, Response } from "express";
+
+router.post("/register", async (req: Request, res: Response) => {
   const { name, password, email } = req.body;
   if (!name || !password) {
     return res.status(400).send("Name and password are required.");
@@ -33,7 +37,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: Request, res: Response) => {
   const { email, password } = req.body;
   if (!email || !password)
     return res.status(400).send("Email and password are required.");
@@ -45,7 +49,8 @@ router.post("/login", async (req, res) => {
   if (!validPass) return res.status(400).send("Email or password wrong");
 
   // create jwt
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
+  const secret = process.env.JWT_SECRET ?? "";
+  const token = jwt.sign({ _id: user._id }, secret);
   res
     .header("Authorization", `Bearer ${token}`)
     .send({ token, id: user._id, message: "Logged in successfully." });
