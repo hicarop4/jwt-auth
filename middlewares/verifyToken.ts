@@ -9,12 +9,14 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
   try {
     const secret = process.env.JWT_SECRET ?? "";
     const verified = jwt.verify(token, secret);
+    console.log(verified);
+
     res.setHeader("user", JSON.stringify(verified));
   } catch (err) {
-    res.status(400).send("Access Denied: " + err);
+    return res.status(400).send("Access Denied: " + err);
   }
 
   next();
 }
 
-module.exports = verifyToken;
+export default verifyToken;

@@ -1,6 +1,7 @@
-const router = require("express").Router();
-const verifyToken = require("../middlewares/verifyToken");
-const { User, getUsers } = require("../models/User");
+import express from "express";
+const router = express.Router();
+import verifyToken from "../middlewares/verifyToken";
+import { User, getUsers } from "../models/User";
 
 // types
 import { Request, Response } from "express";
@@ -26,4 +27,4 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
   return res.send(users);
 });
 
-module.exports = router;
+export default router;

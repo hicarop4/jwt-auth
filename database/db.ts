@@ -12,4 +12,4 @@ mongoose
     console.log(err);
   });
 
-module.exports = mongoose;
+export default mongoose;

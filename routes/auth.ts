@@ -2,7 +2,8 @@ import express from "express";
 const router = express.Router();
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-const { User } = require("../models/User");
+
+import { User } from "../models/User";
 
 // types
 import { Request, Response } from "express";
@@ -56,4 +57,4 @@ router.post("/login", async (req: Request, res: Response) => {
     .send({ token, id: user._id, message: "Logged in successfully." });
 });
 
-module.exports = router;
+export default router;

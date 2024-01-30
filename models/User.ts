@@ -29,14 +29,11 @@ const User = mongoose.model("User", userSchema);
 // controllers
 const getUsers = async () => {
   try {
-    const users = await User.find({}).select("name email date -_id");
+    const users = await User.find({}).select("_id name email createdAt");
     return users;
   } catch (error) {
     console.error(error);
   }
 };
 
-module.exports = {
-  User,
-  getUsers,
-};
+export { User, getUsers };
