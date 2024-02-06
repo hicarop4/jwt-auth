@@ -10,9 +10,10 @@ import { Request, Response } from "express";
 
 router.post("/register", async (req: Request, res: Response) => {
   const { name, password, email } = req.body;
-  if (!name || !password) {
-    return res.status(400).send("Name and password are required.");
+  if (!name || !password || !email) {
+    return res.status(400).send("Name, password and email are required.");
   }
+
   const emailExist = await User.findOne({ email });
   if (emailExist) {
     return res.status(400).send("This email is already in use.");

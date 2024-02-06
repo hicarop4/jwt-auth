@@ -3,14 +3,13 @@ import { Request, Response, NextFunction } from "express";
 
 function verifyToken(req: Request, res: Response, next: NextFunction) {
   const auth = req.header("Authorization") || req.header("authorization");
-  if (!auth) return res.status(401).send("Access Denied");
+  if (!auth)
+    return res.status(401).send("You need to provide an authorization token.");
   const token = auth.split(" ")[1];
 
   try {
     const secret = process.env.JWT_SECRET ?? "";
     const verified = jwt.verify(token, secret);
-    console.log(verified);
-
     res.setHeader("user", JSON.stringify(verified));
   } catch (err) {
     return res.status(400).send("Access Denied: " + err);

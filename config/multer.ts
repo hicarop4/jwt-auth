@@ -1,9 +1,12 @@
 import multer from "multer";
 import path from "path";
-import aws from "aws-sdk";
 import multerS3 from "multer-s3";
 import { S3Client } from "@aws-sdk/client-s3";
 import crpyto from "crypto";
+
+// local to save in local directory
+// s3 to save in s3 storage
+process.env.UPLOAD_TYPE = "s3";
 
 // AWS S3 settings
 const configS3 = new S3Client({
@@ -36,6 +39,7 @@ const storageS3 = multerS3({
     const date = Date.now().toString();
     const random = crpyto.randomBytes(8).toString("hex");
     const fileName = `${date}-${random}-${file.originalname}`;
+
     callback(null, fileName);
   },
 });
@@ -57,7 +61,7 @@ const fileFilter = (
 
 // multer settings
 const config = {
-  storage: storageS3, // change to storageLocal to save in local storage
+  storage: process.env.UPLOAD_TYPE == "local" ? storageLocal : storageS3,
   fileFilter,
   limits: { fileSize: 1024 * 1024 },
 };

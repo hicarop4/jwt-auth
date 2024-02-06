@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  avatar: {
+    type: String,
+    max: 1024,
+    default: "",
+  },
 });
 
 const User = mongoose.model("User", userSchema);
@@ -29,7 +34,7 @@ const User = mongoose.model("User", userSchema);
 // controllers
 const getUsers = async () => {
   try {
-    const users = await User.find({}).select("_id name email createdAt");
+    const users = await User.find({}).select("_id name email createdAt avatar");
     return users;
   } catch (error) {
     console.error(error);
