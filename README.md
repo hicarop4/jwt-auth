@@ -11,7 +11,7 @@
 * Banco de Dados: **MongoDB**
 * Biblioteca para hashing: **bcrypt** 
 * Biblioteca para manipulação de tokens JWT: **jsonwebtoken**
-* Biblioteca para serializer de arquivos: **Multer**
+* Biblioteca de middleware para lidar com parse de arquivos: **Multer**
 * Repositório remoto: **AWS S3**
 ### Instalação
 1. Clone o repositório:
