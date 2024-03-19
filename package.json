@@ -1,10 +1,12 @@
 {
-  "name": "jwt-node-authentication",
+  "name": "jwt-auth",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only index.ts"
+    "dev": "ts-node-dev --respawn --transpile-only index.ts",
+    "start": "node index.js",
+    "build": "tsc --build"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +34,6 @@
     "@types/node": "^20.11.10",
     "nodemon": "^3.0.3",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   }
 }
