@@ -10,6 +10,7 @@ function verifyToken(req: Request, res: Response, next: NextFunction) {
   try {
     const secret = process.env.JWT_SECRET ?? "";
     const verified = jwt.verify(token, secret);
+    // set User details in header so we can use it in next requests
     res.setHeader("user", JSON.stringify(verified));
   } catch (err) {
     return res.status(400).send("Access Denied: " + err);

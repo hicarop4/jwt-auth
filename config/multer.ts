@@ -4,8 +4,8 @@ import multerS3 from "multer-s3";
 import { S3Client } from "@aws-sdk/client-s3";
 import crpyto from "crypto";
 
-// local to save in local directory
-// s3 to save in s3 storage
+// use "local" to save in local directory
+// "s3" to save in s3 storage
 process.env.UPLOAD_TYPE = "s3";
 
 // AWS S3 settings
@@ -63,6 +63,6 @@ const fileFilter = (
 const config = {
   storage: process.env.UPLOAD_TYPE == "local" ? storageLocal : storageS3,
   fileFilter,
-  limits: { fileSize: 1024 * 1024 },
+  limits: { fileSize: 1024 * 1024 }, //1MB
 };
 export default config;

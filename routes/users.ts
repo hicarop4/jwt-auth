@@ -1,8 +1,8 @@
-import express from "express";
+import express, { NextFunction } from "express";
 const router = express.Router();
 import verifyToken from "../middlewares/verifyToken";
 import { User, getUsers } from "../models/User";
-import multer from "multer";
+import multer, { MulterError } from "multer";
 import config from "../config/multer";
 
 // types
@@ -42,38 +42,42 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
   return res.send(users);
 });
 
-const upload = multer(config);
-router.post(
-  "/avatar",
-  verifyToken,
-  upload.single("avatar"),
-  async (req: Request, res: Response) => {
-    if (!req.file) {
-      return res
-        .status(400)
-        .send(
-          "You need to send a file within extensions png, jpg, bjpeg or gif."
-        );
-    }
-    const userPayload = String(res.getHeader("user"));
-    if (!userPayload)
-      return res
-        .status(400)
-        .send("You need to be authenticated to update your avatar profile.");
-    // updates avatar profile with the URL of the uploaded image
-    try {
-      const _id = JSON.parse(userPayload)["_id"];
-      const user = await User.findOne({ _id });
-      if (!user) return res.status(404).send("User not found.");
-      user.avatar =
-        req.file.path || (req.file as Express.MulterS3.File).location;
-      user.save();
-    } catch (error) {
-      return res.status(400).send("Authentication failed.");
-    }
-
-    res.status(200).send("Avatar was saved with success.");
+const handleAvatarController = async (req: Request, res: Response) => {
+  if (!req.file) {
+    return res
+      .status(400)
+      .send(
+        "You need to send a file within extensions png, jpg, bjpeg or gif."
+      );
   }
-);
+  const userPayload = String(res.getHeader("user"));
+  if (!userPayload)
+    return res
+      .status(400)
+      .send("You need to be authenticated to update your avatar profile.");
+  // updates avatar profile with the URL of the uploaded image
+  try {
+    const _id = JSON.parse(userPayload)["_id"];
+    const user = await User.findOne({ _id });
+    if (!user) return res.status(404).send("User not found.");
+    // saves avatar url to avatar field in mongoDB
+    user.avatar = req.file.path || (req.file as Express.MulterS3.File).location;
+    user.save();
+  } catch (error) {
+    return res.status(400).send("Authentication failed.");
+  }
+
+  res.status(200).send("Avatar was saved with success.");
+};
+
+const uploadSingleAvatar = multer(config).single("avatar");
+router.post("/avatar", verifyToken, async (req: Request, res: Response) => {
+  uploadSingleAvatar(req, res, (err) => {
+    if (err) {
+      return res.status(400).send("File is too large. Limit: 1MB");
+    }
+    return handleAvatarController(req, res);
+  });
+});
 
 export default router;
